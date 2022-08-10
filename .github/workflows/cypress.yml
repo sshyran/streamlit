@@ -140,13 +140,13 @@ jobs:
           echo "${js_specs[@]:${startIndex}:${interval}}"
           scripts/run_e2e_tests.py -a "${js_specs[@]:${startIndex}:${interval}}"
         shell: bash -l -u -o pipefail {0}
-      # - name: store videos
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: cypress_videos
-      #     path: frontend/cypress/videos
-      # - name: store snapshots
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: cypress_snapshots
-      #     path: frontend/cypress/snapshots
+      - name: store videos
+        uses: actions/upload-artifact@v3
+        with:
+          name: cypress_videos
+          path: frontend/cypress/videos
+      - name: store snapshots
+        uses: actions/upload-artifact@v3
+        with:
+          name: cypress_snapshots
+          path: frontend/cypress/snapshots
