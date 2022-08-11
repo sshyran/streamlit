@@ -2,7 +2,9 @@ runs:
   using: composite
   steps:
     - name: Test where HOME is
-      run: echo $HOME
+      run: |
+       echo "THIS IS THE HOME DIRECTORY:"
+       echo $HOME
     - name: Run make develop
       run: |
         source venv/bin/activate

@@ -1,49 +1,88 @@
-# name: Cypress Tests
+name: Cypress Tests
 
-# on: [push]
+on: [push]
 
-# jobs:
-#   # interval of 6 files:
-#   #       specs: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21 ]
-#   # interval of 5 files:
-#   #       specs: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25 ]
-#   # interval of 4 files:
-#   #       specs: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31 ]
-#   # interval of 3 files:
-#   #       specs: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41 ]
+jobs:
+  # interval of 6 files:
+  #       specs: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21 ]
+  # interval of 5 files:
+  #       specs: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25 ]
+  # interval of 4 files:
+  #       specs: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31 ]
+  # interval of 3 files:
+  #       specs: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41 ]
 
-#   e2e_tests:
-#     env:
-#       SUDO: 'sudo'
-#       BASH_ENV: $HOME/.bash_profile
-#     runs-on: ubuntu-latest
+  e2e_tests:
+    env:
+      SUDO: 'sudo'
+      BASH_ENV: $HOME/.bash_profile
+    runs-on: ubuntu-latest
 
-#     strategy:
-#       fail-fast: false
-#       matrix:
-#         specs: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21 ]
+    strategy:
+      fail-fast: false
+      matrix:
+        specs: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21 ]
     
-#     steps:
-#       - name: Checkout Streamlit code
-#         uses: actions/checkout@v3
-#       - name: Set up Python 3.7.12
-#         uses: actions/setup-python@v4
-#         with:
-#             python-version: "3.7.12"
-#       - uses: ./.github/actions/update_submodules
-#       - name: Run pre-cache
-#         uses: ./.github/actions/pre_cache
-#       - name: Run pre-make
-#         uses: ./.github/actions/pre_make
-#       - name: Run make init
-#         uses: ./.github/actions/make_init
+    steps:
+      - name: Test where HOME is
+        run: |
+        echo "THIS IS THE HOME DIRECTORY:"
+        echo $HOME
+      - name: Checkout Streamlit code
+        uses: actions/checkout@v3
+      - name: Set up Python 3.7.12
+        uses: actions/setup-python@v4
+        with:
+            python-version: "3.7.12"
+      - uses: ./.github/actions/update_submodules
+      - name: Run pre-cache
+        uses: ./.github/actions/pre_cache
+      - name: Run pre-make
+        uses: ./.github/actions/pre_make
+      - name: Run make init
+        uses: ./.github/actions/make_init
+      - name: Run make develop, register mapbox token & streamlit user
+        uses: ./.github/actions/make_develop
+      - name: Install Cypress dependencies
+        run: |
+          ${SUDO} apt-get install -y xvfb libgtk2.0-0 libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 jq curl
+        shell: bash -l -u -o pipefail {0}
+      - name: Cypress Tests
+        run: |
+          source $HOME/.bash_profile
+          js_specs=(e2e/specs/*)
+          # get how many specs to be split up into 21 runs
+          (( interval=(${#js_specs[@]}+21-1)/21 ))
+          (( startIndex = (${{matrix.specs}} - 1) * ${interval} ))
+          echo "Specs tested in this job:"
+          echo "${js_specs[@]:${startIndex}:${interval}}"
+          scripts/run_e2e_tests.py -a "${js_specs[@]:${startIndex}:${interval}}"
+        shell: bash -l -u -o pipefail {0}
+      - name: Store Cypress Test Results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: cypress_test_results
+          path: frontend/test_results/cypress
+      - name: Store Videos
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: cypress_videos
+          path: frontend/cypress/videos
+      - name: Store Snapshots
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: cypress_snapshots
+          path: frontend/cypress/snapshots
+
+
+
+# Refactored to action:
 #       - name: Run make develop
 #         run: |
 #           make develop
-#         shell: bash -l -u -o pipefail {0}
-#       - name: Install Cypress dependencies
-#         run: |
-#           ${SUDO} apt-get install -y xvfb libgtk2.0-0 libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 jq curl
 #         shell: bash -l -u -o pipefail {0}
 #       - name: Register Mapbox Token
 #         run: |
@@ -59,32 +98,3 @@
 #           echo '[general]' >  ~/.streamlit/credentials.toml
 #           echo 'email = "test@streamlit.io"' >> ~/.streamlit/credentials.toml
 #         shell: bash -l -u -o pipefail {0}
-#       - name: Cypress Tests
-#         run: |
-#           source $HOME/.bash_profile
-#           js_specs=(e2e/specs/*)
-#           # get how many specs to be split up into 21 runs
-#           (( interval=(${#js_specs[@]}+21-1)/21 ))
-#           (( startIndex = (${{matrix.specs}} - 1) * ${interval} ))
-#           echo "Specs tested in this job:"
-#           echo "${js_specs[@]:${startIndex}:${interval}}"
-#           scripts/run_e2e_tests.py -a "${js_specs[@]:${startIndex}:${interval}}"
-#         shell: bash -l -u -o pipefail {0}
-#       - name: Store Cypress Test Results
-#         uses: actions/upload-artifact@v3
-#         if: always()
-#         with:
-#           name: cypress_test_results
-#           path: frontend/test_results/cypress
-#       - name: Store Videos
-#         uses: actions/upload-artifact@v3
-#         if: always()
-#         with:
-#           name: cypress_videos
-#           path: frontend/cypress/videos
-#       - name: Store Snapshots
-#         uses: actions/upload-artifact@v3
-#         if: always()
-#         with:
-#           name: cypress_snapshots
-#           path: frontend/cypress/snapshots
