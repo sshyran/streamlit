@@ -379,3 +379,15 @@ connect-test-env:
 .PHONY: pre-commit-install
 pre-commit-install:
 	pre-commit install
+
+
+gh api \
+  --method DELETE \
+  -H "Accept: application/vnd.github+json" \
+  /repos/streamlit/streamlit/actions/caches?key=v13-nvm-node-modules-dd9d962ae60c4c6ddde6a9aabaf209eaa213c0a588f2abe7338fc053a7b5845b-
+
+
+  gh api \
+  --method DELETE \
+  -H "Accept: application/vnd.github+json" \
+  /repos/streamlit/streamlit/actions/caches?key=v13-python-venv-2075aa95a2df4747aa13ccf7b1db5b1eeadffc1a5ffa81d1fd1b00f3cdf04145

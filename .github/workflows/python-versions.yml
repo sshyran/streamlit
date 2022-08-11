@@ -19,8 +19,8 @@ jobs:
     steps:
       - name: Test where HOME is
         run: |
-        echo "THIS IS THE HOME DIRECTORY:"
-        echo $HOME
+          echo "THIS IS THE HOME DIRECTORY:"
+          echo $HOME
       - name: Checkout Streamlit code
         uses: actions/checkout@v3
       - name: Set up Python ${{ matrix.python-version }}
