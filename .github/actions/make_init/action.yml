@@ -1,17 +1,17 @@
 runs:
   using: composite
   steps:
-    - name: Restore nvm, pre-commit cache, & node modules from cache
-      id: cache-nvm-node-modules
-      uses: actions/cache@v3
-      with:
-        path: |
-          ~/.nvm
-          ~/.cache
-          frontend/node_modules
-        key: v13-nvm-node-modules-${{ hashFiles('**/yarn.lock.md5') }}-${{ hashFiles('~/.pre-commit-config.yaml') }}
+    # - name: Restore nvm, pre-commit cache, & node modules from cache
+    #   id: cache-nvm-node-modules
+    #   uses: actions/cache@v3
+    #   with:
+    #     path: |
+    #       ~/.nvm
+    #       ~/.cache
+    #       frontend/node_modules
+    #     key: v13-nvm-node-modules-${{ hashFiles('**/yarn.lock.md5') }}-${{ hashFiles('~/.pre-commit-config.yaml') }}
     - name: Install nvm, pre-commit cache and node_modules
-      if: steps.cache-nvm-node-modules.cache-hit != 'true'
+      # if: steps.cache-nvm-node-modules.cache-hit != 'true'
       run: |
         if [ ! -d ~/.nvm ] ; then
           cd ..
@@ -40,14 +40,14 @@ runs:
         ${SUDO} apt update
         ${SUDO} apt-get install -y libgvc6
       shell: bash -l -v -e -u -o pipefail {0}
-    - name: Restore virtualenv from cache
-      id: cache-virtualenv
-      uses: actions/cache@v3
-      with:
-        path: venv
-        key: v13-python-venv-${{ hashFiles('**/python_cache_key.md5') }}
+    # - name: Restore virtualenv from cache
+    #   id: cache-virtualenv
+    #   uses: actions/cache@v3
+    #   with:
+    #     path: venv
+    #     key: v13-python-venv-${{ hashFiles('**/python_cache_key.md5') }}
     - name: Create Virtual Env
-      if: steps.cache-virtualenv.outputs.cache-hit != 'true'
+      # if: steps.cache-virtualenv.outputs.cache-hit != 'true'
       run: |
         python -m venv venv
         source venv/bin/activate
