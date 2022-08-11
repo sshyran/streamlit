@@ -35,46 +35,45 @@ jobs:
         run: |
           make develop
         shell: bash -l -v -e -u -o pipefail {0}
-      - name: register streamlit user
+      - name: Register Streamlit User
         run: |
-          mkdir $HOME/.streamlit \
-          && echo '[general]' >  $HOME/.streamlit/credentials.toml \
-          && echo 'email = "test@streamlit.io"' >> $HOME/.streamlit/credentials.toml
+          if [ ! -d $HOME/.streamlit ] ; then
+            mkdir $HOME/.streamlit
+          fi
+          echo '[general]' >  ~/.streamlit/credentials.toml
+          echo 'email = "test@streamlit.io"' >> ~/.streamlit/credentials.toml
         shell: bash -l -v -e -u -o pipefail {0}
-      - name: register mapbox token
+      - name: Register Mapbox Token
         run: |
           MAPBOX_TOKEN=$(curl -sS https://data.streamlit.io/tokens.json | jq -r '.["mapbox-localhost"]') \
           && echo '[mapbox]' >  ~/.streamlit/config.toml \
           && echo 'token = "'$MAPBOX_TOKEN'"' >> ~/.streamlit/config.toml
         shell: bash -l -v -e -u -o pipefail {0}
-      - name: Run linters
+      - name: Run Linters
         run: |
+          # TODO: ADD ABILITY TO ACTUALLY SEE WHAT THE LINT PROBLEM IS
           source $HOME/.bash_profile
-          make jslint &> jslint_error.txt
-          echo "$(<jslint_error.txt )"
-          # TODO: ADD ABILITY TO ACTUALLY SEE WHAT THE LINT PROBLEM IS
-          echo "Please run make pyformat if this job fails"
-          make pylint &> pylint_error.txt
-          echo "$(<pylint_error.txt )"
-          # TODO: ADD ABILITY TO ACTUALLY SEE WHAT THE LINT PROBLEM IS
+          # Run eslint as a standalone command to generate the test report.
+          PRE_COMMIT_NO_CONCURRENCY=true DISABLE=eslint pipenv run pre-commit run --show-diff-on-failure --color=always --all-files
+          make jslint
         shell: bash -l -v -e -u -o pipefail {0}
-      - name: Run type checkers
+      - name: Run Type Checkers
         run: |
           source $HOME/.bash_profile
           make tstypecheck
           scripts/mypy --report
         shell: bash -l -v -e -u -o pipefail {0}
-      - name: Run python tests
+      - name: Run Python Tests
         run: |
           source $HOME/.bash_profile
           make pycoverage
         shell: bash -l -v -e -u -o pipefail {0}
-      - name: Run integration tests
+      - name: Run Integration Tests
         run: |
           source $HOME/.bash_profile
           make integration-tests
         shell: bash -l -v -e -u -o pipefail {0}
-      - name: CLI smoke tests
+      - name: CLI Smoke Tests
         run: |
           source $HOME/.bash_profile
           make cli-smoke-tests
