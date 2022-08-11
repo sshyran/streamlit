@@ -66,11 +66,11 @@ runs:
         ${SUDO} apt update
         ${SUDO} apt-get install -y gnupg
         ${SUDO} pip install mypy-protobuf
+        ${SUDO} pip install protobuf
         echo "deb http://ppa.launchpad.net/maarten-fonville/protobuf/ubuntu trusty main" | ${SUDO} tee /etc/apt/sources.list.d/protobuf.list
         ${SUDO} apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4DEA8909DC6A13A3
         ${SUDO} apt update
         ${SUDO} apt-get install -y protobuf-compiler
-        source $HOME/.bash_profile
         # Generate protobufs
         make protobuf
       shell: bash -l -v -e -u -o pipefail {0}
