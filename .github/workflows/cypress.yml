@@ -89,7 +89,7 @@ jobs:
       fail-fast: false
       matrix:
         # specs: ${{ fromJson(needs.build.outputs.matrix) }}
-        specs: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 ]
+        specs: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21 ]
     
     steps:
       - uses: actions/checkout@v3
@@ -133,19 +133,21 @@ jobs:
         run: |
           source $HOME/.bash_profile
           js_specs=(e2e/specs/*)
-          # get how many specs to be split up into 20 runs
-          (( interval=(${#js_specs[@]}+20-1)/20 ))
+          # get how many specs to be split up into 21 runs
+          (( interval=(${#js_specs[@]}+21-1)/21 ))
           (( startIndex = (${{matrix.specs}} - 1) * ${interval} ))
           echo $startIndex
           echo "${js_specs[@]:${startIndex}:${interval}}"
           scripts/run_e2e_tests.py -a "${js_specs[@]:${startIndex}:${interval}}"
         shell: bash -l -u -o pipefail {0}
       - name: store videos
+        if: failure()
         uses: actions/upload-artifact@v3
         with:
           name: cypress_videos
           path: frontend/cypress/videos
       - name: store snapshots
+        if: failure()
         uses: actions/upload-artifact@v3
         with:
           name: cypress_snapshots
