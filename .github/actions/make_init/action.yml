@@ -1,14 +1,17 @@
 runs:
   using: composite
   steps:
-    - name: Restore nvm and node_modules from cache
-      id: cache-nvm-node-yarn
+    - name: Restore nvm, pre-commit cache, & node modules from cache
+      id: cache-nvm-node-modules
       uses: actions/cache@v3
       with:
-        path: ~/frontend/yarn.lock
-        key: v13-nvm_node_modules-${{ hashFiles('**/yarn.lock.md5') }}
-    - name: Install NVM, Node.js, and Yarn
-      if: steps.cache-nvm-node-yarn.outputs.cache-hit != 'true'
+        path: |
+          ~/.nvm
+          ~/.cache
+          frontend/node_modules
+        key: v13-nvm-node-modules-${{ hashFiles('**/yarn.lock.md5') }}-${{ hashFiles('~/.pre-commit-config.yaml') }}
+    - name: Install nvm, pre-commit cache and node_modules
+      if: steps.cache-nvm-node-modules.cache-hit != 'true'
       run: |
         if [ ! -d ~/.nvm ] ; then
           cd ..
@@ -22,13 +25,40 @@ runs:
           echo "lts/*" > .nvmrc
           nvm install
         fi
-        # install yarn
         npm install --location=global yarn
         if [ ! -d frontend/node_modules ] ; then
           source "$HOME/.nvm/nvm.sh"
           make react-init
         fi
       shell: bash -l -v -e -u -o pipefail {0}
+    # - name: Restore nvm and node_modules from cache
+    #   id: cache-nvm-node-yarn
+    #   uses: actions/cache@v3
+    #   with:
+    #     path: ~/frontend/yarn.lock
+    #     key: v13-nvm_node_modules-${{ hashFiles('**/yarn.lock.md5') }}
+    # - name: Install NVM, Node.js, and Yarn
+    #   if: steps.cache-nvm-node-yarn.outputs.cache-hit != 'true'
+    #   run: |
+    #     if [ ! -d ~/.nvm ] ; then
+    #       cd ..
+    #       export NVM_DIR="$HOME/.nvm"
+    #       [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+    #       mkdir $NVM_DIR
+    #       curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
+    #       echo "source $NVM_DIR/nvm.sh --install" >> "$HOME/.bash_profile"
+    #       cd -
+    #       source $HOME/.bash_profile
+    #       echo "lts/*" > .nvmrc
+    #       nvm install
+    #     fi
+    #     # install yarn
+    #     npm install --location=global yarn
+    #     if [ ! -d frontend/node_modules ] ; then
+    #       source "$HOME/.nvm/nvm.sh"
+    #       make react-init
+    #     fi
+    #   shell: bash -l -v -e -u -o pipefail {0}
     - name: Install pyodbc dependencies
       run: |
         ${SUDO} apt-get install -y unixodbc-dev
@@ -42,7 +72,7 @@ runs:
       id: cache-virtualenv
       uses: actions/cache@v3
       with:
-        path: ~/venv/bin
+        path: venv
         key: v13-python-venv-${{ hashFiles('**/python_cache_key.md5') }}
     - name: Create Virtual Env
       if: steps.cache-virtualenv.outputs.cache-hit != 'true'
