@@ -42,7 +42,7 @@ runs:
       id: cache-virtualenv
       uses: actions/cache@v3
       with:
-        path: ~/
+        path: ~/venv/bin
         key: v13-python-venv-${{ hashFiles('**/python_cache_key.md5') }}
     - name: Create Virtual Env
       if: steps.cache-virtualenv.outputs.cache-hit != 'true'
