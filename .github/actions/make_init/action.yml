@@ -72,6 +72,7 @@ runs:
         ${SUDO} apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4DEA8909DC6A13A3
         ${SUDO} apt update
         ${SUDO} apt-get install -y protobuf-compiler
+        
         # Generate protobufs
         make protobuf
       shell: bash -l -v -e -u -o pipefail {0}
