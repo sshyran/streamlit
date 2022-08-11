@@ -66,6 +66,9 @@ jobs:
       - name: Run Python Tests
         run: |
           source $HOME/.bash_profile
+          if [ ${{ matrix.python-version }} == "3.7.12" ]; then
+            ${SUDO} apt-get install python-pydot python-pydot-ng graphviz 
+          fi
           make pycoverage
         shell: bash -l -v -e -u -o pipefail {0}
       - name: Run Integration Tests
