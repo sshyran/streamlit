@@ -13,6 +13,7 @@ runs:
     - name: add payload to profile
       run: |
         echo "echo 'executed ~/.bash_profile'" >> $HOME/.bash_profile
+      shell: bash -l -v -e -u -o pipefail {0}
     - name: Install nvm, pre-commit cache and node_modules
       # if: steps.cache-nvm-node-modules.cache-hit != 'true'
       run: |
