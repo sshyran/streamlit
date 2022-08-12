@@ -32,6 +32,7 @@ jobs:
         run: |
           # TODO: ADD ABILITY TO ACTUALLY SEE WHAT THE LINT PROBLEM IS
           # source $HOME/.bash_profile
+          # source venv/bin/activate
           # Run eslint as a standalone command to generate the test report.
           PRE_COMMIT_NO_CONCURRENCY=true DISABLE=eslint pipenv run pre-commit run --show-diff-on-failure --color=always --all-files
           make jslint
