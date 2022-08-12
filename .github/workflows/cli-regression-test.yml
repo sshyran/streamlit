@@ -25,11 +25,9 @@
 #       - name: Build Package - Fast
 #         timeout-minutes: 120
 #         run: |
-#           # source venv/bin/activate
 #           sudo apt-get install rsync
 #           BUILD_AS_FAST_AS_POSSIBLE=1 make package
 #       - name: Run CLI regression tests
 #         run: |
-#           # source venv/bin/activate
 #           export SKIP_VERSION_CHECK=true
 #           make cli-regression-tests

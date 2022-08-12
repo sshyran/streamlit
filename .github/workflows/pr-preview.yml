@@ -12,6 +12,7 @@ jobs:
         shell: bash -ileo pipefail {0}
 
     steps:
+      # TODO: Add the read/write Github deploy key ??
       - name: Checkout Streamlit code
         uses: actions/checkout@v3
       - name: Set up Python 3.9.7
@@ -24,10 +25,10 @@ jobs:
       - uses: ./.github/actions/make_init
       - name: Create wheel file
         timeout-minutes: 120
-        command: |
+        run: |
           sudo apt-get install rsync
           BUILD_AS_FAST_AS_POSSIBLE=1 make package
-      TODO:
+      # TODO:
       - name: Set PREVIEW_BRANCH envvar
         run: |
           echo ${GITHUB_REF}
