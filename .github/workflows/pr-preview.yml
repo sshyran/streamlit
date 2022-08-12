@@ -1,0 +1,93 @@
+name: PR Preview
+
+on: [push]
+
+jobs:
+  pr-preview:
+
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        shell: bash -ileo pipefail {0}
+
+    steps:
+      - name: Checkout Streamlit code
+        uses: actions/checkout@v3
+      - name: Set up Python 3.9.7
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9.7"
+      - uses: ./.github/actions/update_submodules
+      - uses: ./.github/actions/pre_cache
+      - uses: ./.github/actions/pre_make
+      - uses: ./.github/actions/make_init
+      - name: Create wheel file
+        timeout-minutes: 120
+        command: |
+          sudo apt-get install rsync
+          BUILD_AS_FAST_AS_POSSIBLE=1 make package
+      TODO:
+      - name: Set PREVIEW_BRANCH envvar
+        run: |
+          echo ${GITHUB_REF}
+          echo $PR_NUMBER
+          echo $BRANCH
+          echo "export PREVIEW_BRANCH=$(
+            if [[ -n "${PR_NUMBER}" ]]
+            then
+              echo "pr-${PR_NUMBER}"
+            elif [[ -n "${GIT_BRANCH}" ]]
+            then
+              echo "${GIT_BRANCH}-preview"
+            elif [[ -n "${TAG}" ]]
+            then
+              echo "tag-${TAG}"
+            else
+              echo "main-preview"
+            fi
+          )" >> $HOME/.bash_profile
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          GIT_BRANCH: ${GITHUB_REF##*/}
+          TAG: ${GITHUB_REF#refs/*/}
+      - name: Upload wheel to S3
+        run: |
+          sudo apt-get install -y awscli
+          aws configure set aws_access_key_id ${CORE_PREVIEWS_S3_KEY_ID}
+          aws configure set aws_secret_access_key ${CORE_PREVIEWS_S3_SECRET_KEY}
+
+          cd lib/dist
+          export WHEELFILE="$(ls -t *.whl | head -n 1)"
+
+          if [ ${GIT_BRANCH} = "release/demo" ]
+          then
+            aws s3 cp ${WHEELFILE} s3://core-previews/${PREVIEW_BRANCH}/streamlit-11.11.11-py2.py3-none-any.whl --acl public-read
+            echo -e "Here is the link to download the wheel file: https://core-previews.s3-us-west-2.amazonaws.com/${PREVIEW_BRANCH}/streamlit-11.11.11-py2.py3-none-any.whl"
+          else
+            aws s3 cp ${WHEELFILE} s3://core-previews/${PREVIEW_BRANCH}/ --acl public-read
+            echo -e "Here is the link to download the wheel file: https://core-previews.s3-us-west-2.amazonaws.com/${PREVIEW_BRANCH}/${WHEELFILE}"
+          fi
+
+          cd ../..
+          echo -e "https://core-previews.s3-us-west-2.amazonaws.com/${PREVIEW_BRANCH}/${WHEELFILE}" >> S3_URL
+        env:
+          GIT_BRANCH: ${GITHUB_REF##*/}
+      - name: Setup preview repo
+        run: |
+          git config --global user.email "core+streamlitbot-github@streamlit.io"
+          git config --global user.name "Streamlit Bot"
+          git clone git@github.com:streamlit/core-previews.git
+
+          cd core-previews
+          git branch -D ${PREVIEW_BRANCH} &>/dev/null || true
+          git checkout -b ${PREVIEW_BRANCH}
+
+          cat ../S3_URL >> requirements.txt
+
+          git add .
+          git commit -m "Prepare core preview: ${PREVIEW_BRANCH}"
+          git push -f origin ${PREVIEW_BRANCH}
+      - name: Ready to deploy!
+        run: |
+          echo -e "https://share.streamlit.io/deploy?repository=streamlit/core-previews&branch=${PREVIEW_BRANCH}&mainModule=streamlit_app.py"

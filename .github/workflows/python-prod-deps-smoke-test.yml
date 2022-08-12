@@ -1,72 +1,72 @@
-name: Python Prod Deps Smoke Test
+# name: Python Prod Deps Smoke Test
 
-on: [push]
+# on: [push]
 
-jobs:
-  build:
+# jobs:
+#   python-prod-deps-smoke-test:
 
-    runs-on: ubuntu-latest
+#     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        shell: bash -ileo pipefail {0}
+#     defaults:
+#       run:
+#         shell: bash -ileo pipefail {0}
 
-    steps:
-      - name: Checkout Streamlit code
-        uses: actions/checkout@v3
-      - name: Set up Python 3.9.7
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.9.7"
-      - uses: ./.github/actions/update_submodules
-      - uses: ./.github/actions/pre_cache
-      - uses: ./.github/actions/pre_make
-      - name: Install NVM, Node.js, and Yarn
-        run: |
-          if [ ! -d ~/.nvm ] ; then
-            # install nodejs via nvm
-            curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.35.2/install.sh | bash
-            source "$HOME/.nvm/nvm.sh"
-            nvm install --lts=fermium
-            # install yarn
-            npm install -g yarn
-          fi
-          if [ ! -d frontend/node_modules ] ; then
-            source "$HOME/.nvm/nvm.sh"
-            make react-init
-          fi
-          echo 'export NVM_DIR="$HOME/.nvm"' >> $HOME/.bash_profile
-          echo 'source "$NVM_DIR/nvm.sh"' >> $HOME/.bash_profile
-      - name: Create Virtual Env
-        run: |
-          python -m venv venv
-          source venv/bin/activate
-          pip install --upgrade pip
-          pip install pipenv mypy mypy-protobuf 'protobuf<4'
-          deactivate
+#     steps:
+#       - name: Checkout Streamlit code
+#         uses: actions/checkout@v3
+#       - name: Set up Python 3.9.7
+#         uses: actions/setup-python@v4
+#         with:
+#           python-version: "3.9.7"
+#       - uses: ./.github/actions/update_submodules
+#       - uses: ./.github/actions/pre_cache
+#       - uses: ./.github/actions/pre_make
+#       - name: Install NVM, Node.js, and Yarn
+#         run: |
+#           if [ ! -d ~/.nvm ] ; then
+#             # install nodejs via nvm
+#             curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.35.2/install.sh | bash
+#             source "$HOME/.nvm/nvm.sh"
+#             nvm install --lts=fermium
+#             # install yarn
+#             npm install -g yarn
+#           fi
+#           if [ ! -d frontend/node_modules ] ; then
+#             source "$HOME/.nvm/nvm.sh"
+#             make react-init
+#           fi
+#           echo 'export NVM_DIR="$HOME/.nvm"' >> $HOME/.bash_profile
+#           echo 'source "$NVM_DIR/nvm.sh"' >> $HOME/.bash_profile
+#       - name: Create Virtual Env
+#         run: |
+#           python -m venv venv
+#           source venv/bin/activate
+#           pip install --upgrade pip
+#           pip install pipenv mypy mypy-protobuf 'protobuf<4'
+#           deactivate
 
-          # Add 'activate venv' to $HOME/.bash_profile. This means that our venv will be active
-          # for the remainder of the job ($HOME/.bash_profile is evaluated at each step).
-          echo 'source venv/bin/activate' >> $HOME/.bash_profile
-      - name: Generate Protobufs
-        run: |
-          source venv/bin/activate
-          # install protobuf v3
-          sudo apt update
-          sudo apt-get install -y gnupg
-          sudo pip install mypy-protobuf
-          echo "deb http://ppa.launchpad.net/maarten-fonville/protobuf/ubuntu trusty main" | sudo tee /etc/apt/sources.list.d/protobuf.list
-          sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4DEA8909DC6A13A3
-          sudo apt update
-          sudo apt-get install -y protobuf-compiler
+#           # Add 'activate venv' to $HOME/.bash_profile. This means that our venv will be active
+#           # for the remainder of the job ($HOME/.bash_profile is evaluated at each step).
+#           echo 'source venv/bin/activate' >> $HOME/.bash_profile
+#       - name: Generate Protobufs
+#         run: |
+#           source venv/bin/activate
+#           # install protobuf v3
+#           sudo apt update
+#           sudo apt-get install -y gnupg
+#           sudo pip install mypy-protobuf
+#           echo "deb http://ppa.launchpad.net/maarten-fonville/protobuf/ubuntu trusty main" | sudo tee /etc/apt/sources.list.d/protobuf.list
+#           sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4DEA8909DC6A13A3
+#           sudo apt update
+#           sudo apt-get install -y protobuf-compiler
           
-          # Generate protobufs
-          make protobuf
-      - name: Run make develop
-        run: |
-          source venv/bin/activate
-          make develop
-      - name: Run CLI smoke tests
-        run: |
-          source venv/bin/activate
-          make cli-smoke-tests
+#           # Generate protobufs
+#           make protobuf
+#       - name: Run make develop
+#         run: |
+#           source venv/bin/activate
+#           make develop
+#       - name: Run CLI smoke tests
+#         run: |
+#           source venv/bin/activate
+#           make cli-smoke-tests
