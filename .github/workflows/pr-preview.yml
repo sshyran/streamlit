@@ -33,23 +33,27 @@ jobs:
         run: |
           echo ${GITHUB_REF_TYPE}
           echo ${REF_NAME}
+          echo $REF_NAME
+          echo ${PR_NUMBER}
+          echo $PR_NUMBER
+
           echo "export PREVIEW_BRANCH=$(
-            if [[ -n "${PR_NUMBER}" ]]
+            if [[ -n "$PR_NUMBER" ]]
             then
               echo "pr-${PR_NUMBER}"
             elif ${GITHUB_REF_TYPE} == branch
             then
-              echo "${REF_NAME}-preview"
+              echo "$REF_NAME-preview"
             elif ${GITHUB_REF_TYPE} == tag
             then
-              echo "tag-${REF_NAME}"
+              echo "tag-$REF_NAME"
             else
               echo "main-preview"
             fi
           )" >> $HOME/.bash_profile
         env:
           PR_NUMBER: ${{ github.event.pull_request.number }}
-          REF_NAME: ${GITHUB_REF_NAME}
+          REF_NAME: ${{ GITHUB_REF_NAME }}
       # - name: Upload wheel to S3
       #   run: |
       #     sudo apt-get install -y awscli
