@@ -17,7 +17,7 @@ runs:
     - name: test interactive login
       run: |
         echo "interactive login test"
-      shell: bash -l -i -e -u -o pipefail {0}
+      shell: bash -l -i -e -o pipefail {0}
     - name: explicit source
       run: |
         source $HOME/.bash_profile
