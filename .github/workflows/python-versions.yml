@@ -57,7 +57,7 @@ jobs:
         run: |
           # source $HOME/.bash_profile
           if [ ${{ matrix.python-version }} == 3.7.12 ]; then
-            ${SUDO} apt-get install python3-pydot python3-pydot-ng graphviz
+            sudo apt-get install python3-pydot python3-pydot-ng graphviz
           fi
           make pycoverage
       - name: Run Integration Tests
