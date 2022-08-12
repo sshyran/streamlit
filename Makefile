@@ -384,10 +384,14 @@ pre-commit-install:
 gh api \
   --method DELETE \
   -H "Accept: application/vnd.github+json" \
-  /repos/streamlit/streamlit/actions/caches?key=v13-nvm-node-modules-dd9d962ae60c4c6ddde6a9aabaf209eaa213c0a588f2abe7338fc053a7b5845b-
-
+  /repos/streamlit/streamlit/actions/caches?key=v13-nvm-node-modules-dd9d962ae60c4c6ddde6a9aabaf209eaa213c0a588f2abe7338fc053a7b5845b-e976bf598c0477d1a4fb915a7ee935fab77d57cb21368e2d5cf066754fc51db6
 
   gh api \
   --method DELETE \
   -H "Accept: application/vnd.github+json" \
-  /repos/streamlit/streamlit/actions/caches?key=v13-python-venv-2075aa95a2df4747aa13ccf7b1db5b1eeadffc1a5ffa81d1fd1b00f3cdf04145
+  /repos/streamlit/streamlit/actions/caches?key=v13-python-venv-80139294e7e564593fd0e3f5cb08033595477e1b5d33c4b5805b801aee83402a
+
+  gh api \
+  --method DELETE \
+  -H "Accept: application/vnd.github+json" \
+  /repos/streamlit/streamlit/actions/caches?key=v13-python-venv-bf6da961f7557204bfb1474f5522988a55d99aca8796513122ba86625d932ef4

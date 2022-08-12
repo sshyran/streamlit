@@ -23,7 +23,7 @@ jobs:
       - uses: ./.github/actions/pre_cache
       - uses: ./.github/actions/pre_make
       - uses: ./.github/actions/make_init
-      - name: Create wheel file
+      - name: Create Wheel File
         timeout-minutes: 120
         run: |
           sudo apt-get install rsync
