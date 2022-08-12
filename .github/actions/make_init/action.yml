@@ -14,6 +14,13 @@ runs:
       run: |
         echo "echo 'executed ~/.bash_profile'" >> $HOME/.bash_profile
       shell: bash -l -e -u -o pipefail {0}
+    - name: test interactive login
+      run: |
+        echo "interactive login test"
+      shell: bash -l -i -e -u -o pipefail {0}
+    - name: explicit source
+      run: |
+        source $HOME/.bash_profile
     - name: Install nvm, pre-commit cache and node_modules
       # if: steps.cache-nvm-node-modules.cache-hit != 'true'
       run: |
