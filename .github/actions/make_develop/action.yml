@@ -1,3 +1,4 @@
+name: "Run make develop, Register Mapbox Token & Streamlit User"
 runs:
   using: composite
   steps:

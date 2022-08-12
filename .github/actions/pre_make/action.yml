@@ -1,3 +1,4 @@
+name: "Pre-Make"
 runs:
   using: composite
   steps:

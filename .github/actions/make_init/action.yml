@@ -1,3 +1,4 @@
+name: "Initialize Virtual Env"
 runs:
   using: composite
   steps:

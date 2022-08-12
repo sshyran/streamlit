@@ -23,16 +23,11 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Update Submodules
-        uses: ./.github/actions/update_submodules
-      - name: Run pre-cache
-        uses: ./.github/actions/pre_cache
-      - name: Run pre-make
-        uses: ./.github/actions/pre_make
-      - name: Run make init
-        uses: ./.github/actions/make_init
-      - name: Run make develop, register mapbox token & streamlit user
-        uses: ./.github/actions/make_develop
+      - uses: ./.github/actions/update_submodules
+      - uses: ./.github/actions/pre_cache
+      - uses: ./.github/actions/pre_make
+      - uses: ./.github/actions/make_init
+      - uses: ./.github/actions/make_develop
       - name: Run Linters
         run: |
           # TODO: ADD ABILITY TO ACTUALLY SEE WHAT THE LINT PROBLEM IS
@@ -40,7 +35,6 @@ jobs:
           # Run eslint as a standalone command to generate the test report.
           PRE_COMMIT_NO_CONCURRENCY=true DISABLE=eslint pipenv run pre-commit run --show-diff-on-failure --color=always --all-files
           make jslint
-        shell: bash -l -v -e -u -o pipefail {0}
       - name: Store Lint Results
         uses: actions/upload-artifact@v3
         if: failure()
@@ -52,7 +46,6 @@ jobs:
           # source $HOME/.bash_profile
           make tstypecheck
           scripts/mypy --report
-        shell: bash -l -v -e -u -o pipefail {0}
       - name: Store Type Check Results
         uses: actions/upload-artifact@v3
         if: failure()
@@ -66,14 +59,11 @@ jobs:
             ${SUDO} apt-get install python3-pydot python3-pydot-ng graphviz
           fi
           make pycoverage
-        shell: bash -l -v -e -u -o pipefail {0}
       - name: Run Integration Tests
         run: |
           # source $HOME/.bash_profile
           make integration-tests
-        shell: bash -l -v -e -u -o pipefail {0}
       - name: CLI Smoke Tests
         run: |
           # source $HOME/.bash_profile
           make cli-smoke-tests
-        shell: bash -l -v -e -u -o pipefail {0}
