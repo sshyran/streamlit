@@ -5,6 +5,7 @@ runs:
       run: |
        echo "THIS IS THE HOME DIRECTORY:"
        echo $HOME
+      shell: bash -l -v -e -u -o pipefail {0}
     - name: Run make develop
       run: |
         source venv/bin/activate
