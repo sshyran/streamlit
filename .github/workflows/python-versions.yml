@@ -4,13 +4,15 @@ on: [push]
 
 jobs:
   build:
+    defaults:
+      run:
+        shell: bash --login --verbose -eu -o pipefail {0}
 
     runs-on: ubuntu-latest
 
     env:
       SUDO: 'sudo'
-      BASH_ENV: $HOME/.bash_profile
-    
+
     strategy:
       fail-fast: false
       matrix:
@@ -34,7 +36,6 @@ jobs:
       - name: Run make develop
         run: |
           make develop
-        shell: bash -l -v -e -u -o pipefail {0}
       - name: Register Mapbox Token
         run: |
           if [ ! -d $HOME/.streamlit ] ; then
@@ -43,12 +44,10 @@ jobs:
           MAPBOX_TOKEN=$(curl -sS https://data.streamlit.io/tokens.json | jq -r '.["mapbox-localhost"]') \
           && echo '[mapbox]' >  ~/.streamlit/config.toml \
           && echo 'token = "'$MAPBOX_TOKEN'"' >> ~/.streamlit/config.toml
-        shell: bash -l -v -e -u -o pipefail {0}
       - name: Register Streamlit User
         run: |
           echo '[general]' >  ~/.streamlit/credentials.toml
           echo 'email = "test@streamlit.io"' >> ~/.streamlit/credentials.toml
-        shell: bash -l -v -e -u -o pipefail {0}
       - name: Run Linters
         run: |
           # TODO: ADD ABILITY TO ACTUALLY SEE WHAT THE LINT PROBLEM IS
@@ -56,7 +55,6 @@ jobs:
           # Run eslint as a standalone command to generate the test report.
           PRE_COMMIT_NO_CONCURRENCY=true DISABLE=eslint pipenv run pre-commit run --show-diff-on-failure --color=always --all-files
           make jslint
-        shell: bash -l -v -e -u -o pipefail {0}
       - name: Store Lint Results
         uses: actions/upload-artifact@v3
         if: always()
@@ -68,7 +66,6 @@ jobs:
           source $HOME/.bash_profile
           make tstypecheck
           scripts/mypy --report
-        shell: bash -l -v -e -u -o pipefail {0}
       - name: Store Type Check Results
         uses: actions/upload-artifact@v3
         if: always()
@@ -82,7 +79,6 @@ jobs:
             ${SUDO} apt-get install python3-pydot python3-pydot-ng graphviz
           fi
           make pycoverage
-        shell: bash -l -v -e -u -o pipefail {0}
       - name: Store Python Test Results
         uses: actions/upload-artifact@v3
         if: always()
@@ -93,9 +89,7 @@ jobs:
         run: |
           source $HOME/.bash_profile
           make integration-tests
-        shell: bash -l -v -e -u -o pipefail {0}
       - name: CLI Smoke Tests
         run: |
           source $HOME/.bash_profile
           make cli-smoke-tests
-        shell: bash -l -v -e -u -o pipefail {0}

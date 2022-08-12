@@ -10,6 +10,9 @@ runs:
     #       ~/.cache
     #       frontend/node_modules
     #     key: v13-nvm-node-modules-${{ hashFiles('**/yarn.lock.md5') }}-${{ hashFiles('~/.pre-commit-config.yaml') }}
+    - name: add payload to profile
+      run: |
+        echo "echo 'executed ~/.bash_profile'" >> $HOME/.bash_profile
     - name: Install nvm, pre-commit cache and node_modules
       # if: steps.cache-nvm-node-modules.cache-hit != 'true'
       run: |
@@ -19,9 +22,10 @@ runs:
           [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
           mkdir $NVM_DIR
           curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
-          echo "source $NVM_DIR/nvm.sh --install" >> "$HOME/.bash_profile"
+          # echo "source $NVM_DIR/nvm.sh --install" >> "$HOME/.bash_profile"
           cd -
-          source $HOME/.bash_profile
+          # source $HOME/.bash_profile
+          source $NVM_DIR/nvm.sh --install
           echo "lts/*" > .nvmrc
           nvm install
         fi
@@ -66,7 +70,6 @@ runs:
         ${SUDO} apt update
         ${SUDO} apt-get install -y gnupg
         ${SUDO} pip install mypy-protobuf
-        ${SUDO} pip install 'protobuf<4'
         echo "deb http://ppa.launchpad.net/maarten-fonville/protobuf/ubuntu trusty main" | ${SUDO} tee /etc/apt/sources.list.d/protobuf.list
         ${SUDO} apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4DEA8909DC6A13A3
         ${SUDO} apt update
