@@ -56,8 +56,9 @@ jobs:
             fi
           )" >> $HOME/.bash_profile
         env:
-          PR_NUMBER: ${{ github.event.pull_request.number }}
-          REF_NAME: ${ GITHUB_REF_NAME }
+          # PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_NUMBER: 1212
+          REF_NAME: GITHUB_REF_NAME
       # - name: Upload wheel to S3
       #   run: |
       #     sudo apt-get install -y awscli
