@@ -14,13 +14,12 @@ runs:
             echo "make.bin exists; not installing"
           else
             echo "/usr/bin/make doesn't exist; installing"
-            ${SUDO} apt-get update
-            ${SUDO} apt-get install -y make
-            ${SUDO} chmod -R 777 /usr/bin/make
-            ${SUDO} cp -f /usr/bin/make make.bin
+            sudo apt-get update
+            sudo apt-get install -y make
+            sudo chmod -R 777 /usr/bin/make
+            sudo cp -f /usr/bin/make make.bin
           fi
-          ${SUDO} cp -f make.bin /usr/bin/make
-      shell: bash -l -v -e -u -o pipefail {0}
+          sudo cp -f make.bin /usr/bin/make
     - name: Restore dot from cache
       id: cache-dot
       uses: actions/cache@v3
@@ -34,10 +33,9 @@ runs:
             echo "dot.bin exists and is non zero"
           else
             echo "/usr/bin/dot doesn't exist, installing"
-            ${SUDO} apt-get update
-            ${SUDO} apt-get install -y graphviz
-            ${SUDO} chmod -R 777 /usr/bin/dot
-            ${SUDO} cp -f /usr/bin/dot dot.bin
+            sudo apt-get update
+            sudo apt-get install -y graphviz
+            sudo chmod -R 777 /usr/bin/dot
+            sudo cp -f /usr/bin/dot dot.bin
           fi
-          ${SUDO} cp -f dot.bin /usr/bin/dot
-      shell: bash -l -v -e -u -o pipefail {0}
+          sudo cp -f dot.bin /usr/bin/dot

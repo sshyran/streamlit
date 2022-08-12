@@ -5,7 +5,6 @@ runs:
       run: |
         cp -f /usr/bin/make make.bin
         md5sum make.bin > $GITHUB_WORKSPACE/make.md5
-      shell: bash -l -v -e -u -o pipefail {0}
     - name: Get 'dot' checksum
       run: |
         if [ -f /usr/bin/dot ] ; then
@@ -16,7 +15,6 @@ runs:
           md5sum dot.bin > $GITHUB_WORKSPACE/dot.md5
           rm -f dot.bin
         fi
-      shell: bash -l -v -e -u -o pipefail {0}
     # Combine hashes of the Python interpreter, Pipfile, and today's
     # date into a file whose checksum will key the Python virtualenv.
     #
@@ -35,8 +33,6 @@ runs:
         md5sum lib/test-requirements-with-tensorflow.txt >> $GITHUB_WORKSPACE/python_cache_key.md5
         md5sum lib/setup.py >> $GITHUB_WORKSPACE/python_cache_key.md5
         date +%F >> $GITHUB_WORKSPACE/python_cache_key.md5
-      shell: bash -l -v -e -u -o pipefail {0}
     - name: Create Yarn cache key
       run: |
         md5sum frontend/yarn.lock > $GITHUB_WORKSPACE/yarn.lock.md5
-      shell: bash -l -v -e -u -o pipefail {0}
