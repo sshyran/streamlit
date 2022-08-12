@@ -21,6 +21,7 @@ runs:
     - name: explicit source
       run: |
         source $HOME/.bash_profile
+      shell: bash -e -u -o pipefail {0}
     - name: Install nvm, pre-commit cache and node_modules
       # if: steps.cache-nvm-node-modules.cache-hit != 'true'
       run: |
