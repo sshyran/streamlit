@@ -63,6 +63,10 @@ jobs:
           # Generate protobufs
           make protobuf
       - name: Run make develop
-        run: make develop
+        run: |
+          source venv/bin/activate
+          make develop
       - name: Run CLI smoke tests
-        run: make cli-smoke-tests
+        run: |
+          source venv/bin/activate
+          make cli-smoke-tests
