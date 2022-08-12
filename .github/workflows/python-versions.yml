@@ -30,9 +30,6 @@ jobs:
       - uses: ./.github/actions/make_develop
       - name: Run Linters
         run: |
-          # TODO: ADD ABILITY TO ACTUALLY SEE WHAT THE LINT PROBLEM IS
-          # source $HOME/.bash_profile
-          # source venv/bin/activate
           # Run eslint as a standalone command to generate the test report.
           PRE_COMMIT_NO_CONCURRENCY=true DISABLE=eslint pipenv run pre-commit run --show-diff-on-failure --color=always --all-files
           make jslint
@@ -44,7 +41,6 @@ jobs:
           path: frontend/test-reports
       - name: Run Type Checkers
         run: |
-          # source $HOME/.bash_profile
           make tstypecheck
           scripts/mypy --report
       - name: Store Type Check Results
@@ -55,16 +51,11 @@ jobs:
           path: lib/test-reports
       - name: Run Python Tests
         run: |
-          # source $HOME/.bash_profile
           if [ ${{ matrix.python-version }} == 3.7.12 ]; then
             sudo apt-get install python3-pydot python3-pydot-ng graphviz
           fi
           make pycoverage
       - name: Run Integration Tests
-        run: |
-          # source $HOME/.bash_profile
-          make integration-tests
+        run: make integration-tests
       - name: CLI Smoke Tests
-        run: |
-          # source $HOME/.bash_profile
-          make cli-smoke-tests
+        run: make cli-smoke-tests
