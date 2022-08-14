@@ -46,7 +46,6 @@ NONWIDGET_ELEMENTS = [
     "bokeh_chart",
     "data_frame",
     "dataframe_selector",
-    "deck_gl_json_chart",
     "doc_string",
     "empty",
     "exception",

@@ -52,7 +52,7 @@ if TYPE_CHECKING:
     from pandas import DataFrame, Series, Index
     from pandas.io.formats.style import Styler
     from plotly.graph_objs._figure import Figure
-    from pydeck.bindings.deck import Deck  # type: ignore[import]
+    # from pydeck.bindings.deck import Deck  # type: ignore[import]
 
 
 # The array value field names are part of the larger set of possible value

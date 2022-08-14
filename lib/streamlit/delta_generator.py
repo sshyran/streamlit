@@ -57,8 +57,6 @@ from streamlit.elements.exception import ExceptionMixin
 from streamlit.elements.bokeh_chart import BokehMixin
 from streamlit.elements.graphviz_chart import GraphvizMixin
 from streamlit.elements.plotly_chart import PlotlyMixin
-from streamlit.elements.deck_gl_json_chart import PydeckMixin
-from streamlit.elements.map import MapMixin
 from streamlit.elements.iframe import IframeMixin
 from streamlit.elements.media import MediaMixin
 from streamlit.elements.checkbox import CheckboxMixin
@@ -139,14 +137,12 @@ class DeltaGenerator(
     ImageMixin,
     LayoutsMixin,
     MarkdownMixin,
-    MapMixin,
     MediaMixin,
     MetricMixin,
     MultiSelectMixin,
     NumberInputMixin,
     PlotlyMixin,
     ProgressMixin,
-    PydeckMixin,
     PyplotMixin,
     RadioMixin,
     SelectboxMixin,

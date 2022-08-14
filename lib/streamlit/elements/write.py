@@ -221,9 +221,6 @@ class WriteMixin:
             elif type_util.is_namedtuple(arg):
                 flush_buffer()
                 self.dg.json(json.dumps(arg._asdict()))
-            elif type_util.is_pydeck(arg):
-                flush_buffer()
-                self.dg.pydeck_chart(arg)
             elif inspect.isclass(arg):
                 flush_buffer()
                 self.dg.text(arg)
