@@ -3,7 +3,7 @@ import asyncio
 import streamlit
 from streamlit.proto.BackMsg_pb2 import BackMsg
 from streamlit.proto.ForwardMsg_pb2 import ForwardMsg
-from streamlit.runtime import Runtime, RuntimeConfig, SessionClient
+from streamlit.runtime.runtime import Runtime, RuntimeConfig, SessionClient
 
 SCRIPT_PATH = "runtime_example_script.py"
 

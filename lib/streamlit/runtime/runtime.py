@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import asyncio
+import threading
 import time
 import traceback
 from enum import Enum
@@ -278,6 +279,7 @@ class Runtime:
             message_enqueued_callback=self._enqueued_some_message,
             local_sources_watcher=LocalSourcesWatcher(self._main_script_path),
             user_info=user_info,
+            main_thread=self._main_thread
         )
 
         LOGGER.debug(
@@ -426,6 +428,8 @@ class Runtime:
             # some functions, e.g. `stop`, that can be called from other
             # threads, and `asyncio.get_running_loop()` is thread-specific.)
             self._eventloop = asyncio.get_running_loop()
+
+            self._main_thread = threading.current_thread()
 
             if on_started is not None:
                 on_started()

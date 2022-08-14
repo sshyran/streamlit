@@ -83,6 +83,7 @@ class AppSession:
         message_enqueued_callback: Optional[Callable[[], None]],
         local_sources_watcher: LocalSourcesWatcher,
         user_info: Dict[str, Optional[str]],
+        main_thread: threading.Thread
     ):
         """Initialize the AppSession.
 
@@ -152,6 +153,8 @@ class AppSession:
 
         self._session_state = SessionState()
         self._user_info = user_info
+
+        self._main_thread = main_thread
 
         LOGGER.debug("AppSession initialized (id=%s)", self.id)
 
@@ -442,8 +445,9 @@ class AppSession:
             run. Set only for the SCRIPT_STARTED event.
         """
 
+        # TODO: can we remove this assertion completel?
         assert (
-            threading.main_thread() == threading.current_thread()
+            self._main_thread == threading.current_thread()
         ), "This function must only be called on the main thread"
 
         if sender is not self._scriptrunner:
