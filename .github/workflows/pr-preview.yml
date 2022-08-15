@@ -1,61 +1,54 @@
-name: PR Preview
+# name: PR Preview
 
-on: [push]
+# on: [push]
 
-jobs:
-  pr-preview:
+# jobs:
+#   pr-preview:
 
-    runs-on: ubuntu-latest
+#     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        shell: bash -ileo pipefail {0}
+#     defaults:
+#       run:
+#         shell: bash -ileo pipefail {0}
 
-    steps:
-      # # TODO: Add the read/write Github deploy key ??
-      # - name: Checkout Streamlit code
-      #   uses: actions/checkout@v3
-      # - name: Set up Python 3.9.7
-      #   uses: actions/setup-python@v4
-      #   with:
-      #     python-version: "3.9.7"
-      # - uses: ./.github/actions/update_submodules
-      # - uses: ./.github/actions/pre_cache
-      # - uses: ./.github/actions/pre_make
-      # - uses: ./.github/actions/make_init
-      # - name: Create Wheel File
-      #   timeout-minutes: 120
-      #   run: |
-      #     sudo apt-get install rsync
-      #     BUILD_AS_FAST_AS_POSSIBLE=1 make package
+#     steps:
+#       # TODO: Add the read/write Github deploy key ??
+#       - name: Checkout Streamlit code
+#         uses: actions/checkout@v3
+#       - name: Set up Python 3.9.7
+#         uses: actions/setup-python@v4
+#         with:
+#           python-version: "3.9.7"
+#       - uses: ./.github/actions/update_submodules
+#       - uses: ./.github/actions/pre_cache
+#       - uses: ./.github/actions/pre_make
+#       - uses: ./.github/actions/make_init
+#       - name: Create Wheel File
+#         timeout-minutes: 120
+#         run: |
+#           sudo apt-get install rsync
+#           BUILD_AS_FAST_AS_POSSIBLE=1 make package
+#       - name: Set PREVIEW_BRANCH envvar
+#         run: |
+#           echo "export PREVIEW_BRANCH=$(
+#             if [[ -n "$PR_NUMBER" ]]
+#             then
+#               echo "pr-$PR_NUMBER"
+#             elif ${GITHUB_REF_TYPE} == branch
+#             then
+#               echo "$GITHUB_REF_NAME-preview"
+#             elif ${GITHUB_REF_TYPE} == tag
+#             then
+#               echo "tag-$GITHUB_REF_NAME"
+#             else
+#               echo "main-preview"
+#             fi
+#           )" >> $HOME/.bash_profile
+#         env:
+#           PR_NUMBER: ${{ github.event.pull_request.number }}
+
+
       # TODO:
-      - name: Set PREVIEW_BRANCH envvar
-        run: |
-          echo $GITHUB_REF_NAME
-          echo "tag-$GITHUB_REF_NAME"
-          echo "${GITHUB_REF_NAME}-preview"
-          if [[ -n "$PR_NUMBER" ]]
-          then
-            echo "pr-${PR_NUMBER}"
-          fi
-
-          echo "export PREVIEW_BRANCH=$(
-            if [[ -n "$PR_NUMBER" ]]
-            then
-              echo "pr-${PR_NUMBER}"
-            elif ${GITHUB_REF_TYPE} == branch
-            then
-              echo "${GITHUB_REF_NAME}-preview"
-            elif ${GITHUB_REF_TYPE} == tag
-            then
-              echo "tag-$GITHUB_REF_NAME"
-            else
-              echo "main-preview"
-            fi
-          )" >> $HOME/.bash_profile
-        env:
-          # PR_NUMBER: ${{ github.event.pull_request.number }}
-          PR_NUMBER: 1212
       # - name: Upload wheel to S3
       #   run: |
       #     sudo apt-get install -y awscli
