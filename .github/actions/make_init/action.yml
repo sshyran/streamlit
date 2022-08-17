@@ -31,7 +31,6 @@ runs:
             unixodbc-dev \
             graphviz \
             libgvc6 \
-            python3-pydot \
             python3-pydot-ng
 
         echo "deb http://ppa.launchpad.net/maarten-fonville/protobuf/ubuntu trusty main" | sudo tee /etc/apt/sources.list.d/protobuf.list
@@ -54,7 +53,9 @@ runs:
         make setup
         make pipenv-install
         deactivate
-
+      shell: bash -ileo pipefail {0}
+    - name: Activate virtualenv
+      run: |
         echo "PATH=${PWD}/venv/bin:${PATH}" >> ${GITHUB_ENV}
         echo "VIRTUAL_ENV=${PWD}/venv" >> ${GITHUB_ENV}
       shell: bash -ileo pipefail {0}
