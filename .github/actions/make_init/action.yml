@@ -85,7 +85,7 @@ runs:
       shell: bash -ileo pipefail {0}
     - name: Generate Protobufs
       run: |
-        source venv/bin/activate
+        # source venv/bin/activate
         # install protobuf v3
         sudo apt update
         sudo apt install -y gnupg
