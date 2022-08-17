@@ -1,9 +1,9 @@
 name: Test Python Versions
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
-  build:
+  python_tests:
 
     runs-on: ubuntu-latest
 
@@ -31,7 +31,6 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - uses: ./.github/actions/update_submodules
       - uses: ./.github/actions/pre_cache
-      # - uses: ./.github/actions/pre_make
       - uses: ./.github/actions/make_init
       - name: Run make develop
         run: |
@@ -50,10 +49,9 @@ jobs:
         run: |
           source venv/bin/activate
           # Extra installation needed for v3.7.12, otherwise keras_test.py fails
-          if [ ${{ matrix.python-version }} == 3.7.12 ]; then
-            # sudo apt-get install python3-pydot python3-pydot-ng graphviz
-            sudo apt-get install python3-pydot python3-pydot-ng
-          fi
+          # if [ ${{ matrix.python-version }} == 3.7.12 ]; then
+          #   sudo apt-get install python3-pydot python3-pydot-ng
+          # fi
           make pycoverage
       - name: Run Integration Tests
         run: |

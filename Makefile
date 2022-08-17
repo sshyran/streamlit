@@ -406,3 +406,24 @@ connect-test-env:
 .PHONY: pre-commit-install
 pre-commit-install:
 	pre-commit install
+
+
+
+
+# DOT Cache
+gh api \
+  --method DELETE \
+  -H "Accept: application/vnd.github+json" \
+  /repos/streamlit/streamlit/actions/caches?key=v1-dot.bin-
+
+# NVM/Node
+gh api \
+  --method DELETE \
+  -H "Accept: application/vnd.github+json" \
+  /repos/streamlit/streamlit/actions/caches?key=v1-nvm-node-modules-dd9d962ae60c4c6ddde6a9aabaf209eaa213c0a588f2abe7338fc053a7b5845b-e976bf598c0477d1a4fb915a7ee935fab77d57cb21368e2d5cf066754fc51db6
+  
+# Venv
+gh api \
+  --method DELETE \
+  -H "Accept: application/vnd.github+json" \
+  /repos/streamlit/streamlit/actions/caches?key=v1-python-venv-2409d187cd8fecb75bafd78eb1abcfe680b0751fd828bf467c7f841c58c05053
