@@ -12,7 +12,7 @@ jobs:
 
     defaults:
       run:
-        shell: bash -ileo pipefail {0}
+        shell: bash -euxo pipefail {0}
     
     strategy:
       fail-fast: false
@@ -32,27 +32,16 @@ jobs:
       - uses: ./.github/actions/pre_cache
       - uses: ./.github/actions/make_init
       - name: Run make develop
-        run: |
-          source venv/bin/activate
-          make develop
+        run: make develop
       - name: Run Linters
         run: |
-          source venv/bin/activate
           # Run eslint as a standalone command to generate the test report.
           PRE_COMMIT_NO_CONCURRENCY=true DISABLE=eslint pipenv run pre-commit run --show-diff-on-failure --color=always --all-files
       - name: Run Type Checkers
-        run: |
-          source venv/bin/activate
-          scripts/mypy --report
+        run: scripts/mypy --report
       - name: Run Python Tests
-        run: |
-          source venv/bin/activate
-          make pycoverage
+        run: make pycoverage
       - name: Run Integration Tests
-        run: |
-          source venv/bin/activate
-          make integration-tests
+        run: make integration-tests
       - name: CLI Smoke Tests
-        run: |
-          # source venv/bin/activate
-          make cli-smoke-tests
+        run: make cli-smoke-tests
