@@ -11,8 +11,8 @@ runs:
           ~/.cache
           frontend/node_modules
         key: v1-nvm-node-modules-${{ hashFiles('**/yarn.lock') }}-${{ hashFiles('**/.pre-commit-config.yaml') }}
-    - name: Install nvm, pre-commit cache and node_modules
-      if: steps.cache-nvm-node-modules.cache-hit != 'true'
+    - if: ${{ steps.cache-nvm-node-modules.outputs.cache-hit != 'true' }}
+      name: Install nvm, pre-commit cache and node_modules
       run: |
         if [ ! -d ~/.nvm ] ; then
           cd ..
@@ -23,7 +23,6 @@ runs:
           echo "source $NVM_DIR/nvm.sh --install" >> "$HOME/.bash_profile"
           cd -
           source $HOME/.bash_profile
-          echo "lts/*" > .nvmrc
           nvm install
         fi
         npm install --location=global yarn
@@ -47,8 +46,8 @@ runs:
       with:
         path: venv
         key: v1-python-venv-${{ hashFiles('**/python_cache_key.md5') }}
-    - name: Create Virtual Env
-      if: steps.cache-virtualenv.outputs.cache-hit != 'true'
+    - if: ${{ steps.cache-virtualenv.outputs.cache-hit != 'true' }}
+      name: Create Virtual Env
       run: |
         python -m venv venv
         source venv/bin/activate

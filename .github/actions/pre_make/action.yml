@@ -23,8 +23,8 @@ runs:
       with:
         path: dot.bin
         key: v1-dot.bin-${{ hashFiles('**/dot.bin') }}
-    - name: Install dot
-      if: steps.cache-dot.outputs.cache-hit != 'true'
+    - if: ${{ steps.cache-dot.outputs.cache-hit != 'true' }}
+      name: Install dot
       run: |
         echo "/usr/bin/dot doesn't exist, installing"
         sudo apt update
