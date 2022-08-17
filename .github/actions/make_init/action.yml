@@ -57,11 +57,10 @@ runs:
 
         # Add 'activate venv' to $HOME/.bash_profile.
         # echo 'source venv/bin/activate' >> $HOME/.bash_profile
-        echo "PATH=${PWD}/venv/bin:${PATH}" >> ${GITHUB_ENV}
-        echo "VIRTUAL_ENV=${PWD}/venv" >> ${GITHUB_ENV}
+        echo 'source venv/bin/activate' >> $GITHUB_PATH
       shell: bash -ileo pipefail {0}
     - name: Generate Protobufs
       run: |
-        source venv/bin/activate
+        # source venv/bin/activate
         make protobuf
       shell: bash -ileo pipefail {0}
