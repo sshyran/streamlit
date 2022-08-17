@@ -21,7 +21,7 @@
 
 #     defaults:
 #       run:
-#         shell: bash -euxo pipefail {0}
+#         shell: bash -ileo pipefail {0}
 
 #     strategy:
 #       fail-fast: false
