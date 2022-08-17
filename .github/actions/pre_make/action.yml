@@ -22,7 +22,7 @@ runs:
       uses: actions/cache@v3
       with:
         path: dot.bin
-        key: v1-dot.bin-${{ hashFiles('**/dot.md5') }}
+        key: v1-dot.bin-${{ hashFiles('**/dot.bin') }}
     - name: Install dot
       if: steps.cache-dot.outputs.cache-hit != 'true'
       run: |
