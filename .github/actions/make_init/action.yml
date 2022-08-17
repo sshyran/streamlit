@@ -49,10 +49,10 @@ runs:
       run: |
         python -m venv venv
         source venv/bin/activate
-        sudo pip install --upgrade pip
-        sudo pip install pip-tools pipenv
+        pip install --upgrade pip
+        make setup
         make pipenv-install
-        deactivate
+        # deactivate
 
         # Add 'activate venv' to $HOME/.bash_profile. This means that our venv will be active
         # for the remainder of the job ($HOME/.bash_profile is evaluated at each step).
@@ -60,6 +60,6 @@ runs:
       shell: bash -ileo pipefail {0}
     - name: Generate Protobufs
       run: |
-        # source venv/bin/activate
+        source venv/bin/activate
         make protobuf
       shell: bash -ileo pipefail {0}
