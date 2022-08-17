@@ -62,6 +62,6 @@ runs:
       shell: bash -ileo pipefail {0}
     - name: Generate Protobufs
       run: |
-        # source venv/bin/activate
+        source venv/bin/activate
         make protobuf
       shell: bash -ileo pipefail {0}
