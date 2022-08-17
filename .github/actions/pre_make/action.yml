@@ -1,7 +1,7 @@
-name: "Pre-Make"
-runs:
-  using: composite
-  steps:
+# name: "Pre-Make"
+# runs:
+#   using: composite
+#   steps:
     # - name: Restore make from cache
     #   id: cache-make
     #   uses: actions/cache@v3
@@ -24,11 +24,11 @@ runs:
     #     path: dot.bin
     #     key: v1-dot.bin-${{ hashFiles('**/dot.bin') }}
     # - if: steps.cache-dot.outputs.cache-hit != 'true'
-    - name: Install dot
-      run: |
-        echo "/usr/bin/dot doesn't exist, installing"
-        sudo apt update
-        sudo apt install -y graphviz
-        # sudo chmod -R 777 /usr/bin/dot
-        # sudo cp -f /usr/bin/dot dot.bin
-      shell: bash -ileo pipefail {0}
+    # - name: Install dot
+    #   run: |
+    #     echo "/usr/bin/dot doesn't exist, installing"
+    #     sudo apt update
+    #     sudo apt install -y graphviz
+    #     # sudo chmod -R 777 /usr/bin/dot
+    #     # sudo cp -f /usr/bin/dot dot.bin
+    #   shell: bash -ileo pipefail {0}

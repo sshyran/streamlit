@@ -54,15 +54,29 @@ runs:
     - name: Initialize React
       run: make react-init
       shell: bash -ileo pipefail {0}
-    - name: Install pyodbc dependencies
-      run: |
-        sudo apt install -y unixodbc-dev
-      shell: bash -ileo pipefail {0}
-    - name: Install graphviz dependencies
+    - name: Install Dependencies
       run: |
         sudo apt update
-        sudo apt install -y libgvc6
+        # protobuf, pyodbc, dot, & graphviz dependencies
+        sudo apt install -y gnupg \
+            unixodbc-dev \
+            graphviz \
+            libgvc6 \
+
+        echo "deb http://ppa.launchpad.net/maarten-fonville/protobuf/ubuntu trusty main" | sudo tee /etc/apt/sources.list.d/protobuf.list
+        sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4DEA8909DC6A13A3
+        sudo apt update
+        sudo apt install -y protobuf-compiler
       shell: bash -ileo pipefail {0}
+    # - name: Install pyodbc dependencies
+    #   run: |
+    #     sudo apt install -y unixodbc-dev
+    #   shell: bash -ileo pipefail {0}
+    # - name: Install graphviz dependencies
+    #   run: |
+    #     sudo apt update
+    #     sudo apt install -y libgvc6
+    #   shell: bash -ileo pipefail {0}
     - name: Restore virtualenv from cache
       id: cache-virtualenv
       uses: actions/cache@v3
@@ -85,14 +99,14 @@ runs:
       shell: bash -ileo pipefail {0}
     - name: Generate Protobufs
       run: |
-        # source venv/bin/activate
+        source venv/bin/activate
         # install protobuf v3
-        sudo apt update
-        sudo apt install -y gnupg
-        echo "deb http://ppa.launchpad.net/maarten-fonville/protobuf/ubuntu trusty main" | sudo tee /etc/apt/sources.list.d/protobuf.list
-        sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4DEA8909DC6A13A3
-        sudo apt update
-        sudo apt install -y protobuf-compiler
+        # sudo apt update
+        # sudo apt install -y gnupg
+        # echo "deb http://ppa.launchpad.net/maarten-fonville/protobuf/ubuntu trusty main" | sudo tee /etc/apt/sources.list.d/protobuf.list
+        # sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4DEA8909DC6A13A3
+        # sudo apt update
+        # sudo apt install -y protobuf-compiler
         
         # Generate protobufs
         make protobuf
