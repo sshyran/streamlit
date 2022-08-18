@@ -63,7 +63,6 @@ jobs:
       - name: Install Cypress dependencies
         run: |
           sudo apt-get install -y xvfb libgtk2.0-0 libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 jq curl
-        shell: bash -l -u -o pipefail {0}
       - name: Cypress Tests
         run: |
           js_specs=(e2e/specs/*)
@@ -73,7 +72,6 @@ jobs:
           echo "Specs tested in this job:"
           echo "${js_specs[@]:${startIndex}:${interval}}"
           scripts/run_e2e_tests.py -a "${js_specs[@]:${startIndex}:${interval}}"
-        shell: bash -l -u -o pipefail {0}
       - name: Store Videos
         uses: actions/upload-artifact@v3
         if: always()

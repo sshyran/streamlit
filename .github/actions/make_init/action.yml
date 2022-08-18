@@ -3,6 +3,7 @@ name: "Setup & Initialize Virtual Env"
 inputs:
   use_cached_venv:
     description: 'Use Cached Virtual Env'
+    required: true
     default: true
 
 runs:
@@ -53,12 +54,13 @@ runs:
     # happens when a user installs Streamlit locally). So we expire our
     # virtualenv cache daily to prevent it from getting far out of sync
     # with what a fresh Streamlit installation would look like.
-    - if: ${{ inputs.use_cached_venv }} == true
+    - if: inputs.use_cached_venv == true
       name: Create Python environment cache key
       run: |
         echo "Creating the cache key"
         echo "This is the input - use_cached_venv:"
-        echo ${{ inputs.use_cached_venv }}
+        echo inputs.use_cached_venv
+        echo inputs.use_cached_venv == true
 
         md5sum $(which python) > $GITHUB_WORKSPACE/python_cache_key.md5
         md5sum lib/Pipfile >> $GITHUB_WORKSPACE/python_cache_key.md5
@@ -67,7 +69,7 @@ runs:
         md5sum lib/setup.py >> $GITHUB_WORKSPACE/python_cache_key.md5
         date +%F >> $GITHUB_WORKSPACE/python_cache_key.md5
       shell: bash -ileo pipefail {0}
-    - if: ${{ inputs.use_cached_venv }} == true
+    - if: inputs.use_cached_venv == true
       name: Restore virtualenv from cache
       id: cache-virtualenv
       uses: actions/cache@v3
@@ -79,9 +81,10 @@ runs:
       run: |
         echo "Creating the virtual env"
         echo "This is the input - use_cached_venv:"
-        echo ${{ inputs.use_cached_venv }}
+        echo inputs.use_cached_venv
+        echo inputs.use_cached_venv == true
         echo "This is the cache hit boolean:"
-        echo ${{ steps.cache-virtualenv.outputs.cache-hit }}
+        echo steps.cache-virtualenv.outputs.cache-hit
 
         python -m venv venv
         source venv/bin/activate
