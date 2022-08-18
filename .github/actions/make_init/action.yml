@@ -55,9 +55,9 @@ runs:
       shell: bash -ileo pipefail {0} {0}
     - name: Activate virtualenv
       run: |
-        echo 'source venv/bin/activate' >> $HOME/.bash_profile
-        # echo "PATH=${PWD}/venv/bin:${PATH}" >> ${GITHUB_ENV}
-        # echo "VIRTUAL_ENV=${PWD}/venv" >> ${GITHUB_ENV}
+        # echo 'source venv/bin/activate' >> $HOME/.bash_profile
+        echo "PATH=${PWD}/venv/bin:${PATH}" >> ${GITHUB_ENV}
+        echo "VIRTUAL_ENV=${PWD}/venv" >> ${GITHUB_ENV}
       shell: bash -ileo pipefail {0} {0}
     - name: Generate Protobufs
       run: make protobuf
