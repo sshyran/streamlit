@@ -4,7 +4,7 @@ inputs:
   use_cached_venv:
     description: 'Use Cached Virtual Env'
     required: true
-    default: true
+    default: 'true'
 
 runs:
   using: composite
@@ -59,7 +59,7 @@ runs:
     # happens when a user installs Streamlit locally). So we expire our
     # virtualenv cache daily to prevent it from getting far out of sync
     # with what a fresh Streamlit installation would look like.
-    - if: inputs.use_cached_venv == true
+    - if: inputs.use_cached_venv == 'true'
       name: Create Python environment cache key
       run: |
         md5sum $(which python) > $GITHUB_WORKSPACE/python_cache_key.md5
@@ -69,7 +69,7 @@ runs:
         md5sum lib/setup.py >> $GITHUB_WORKSPACE/python_cache_key.md5
         date +%F >> $GITHUB_WORKSPACE/python_cache_key.md5
       shell: bash -ileo pipefail {0}
-    - if: inputs.use_cached_venv == true
+    - if: inputs.use_cached_venv == 'true'
       name: Restore virtualenv from cache
       id: cache-virtualenv
       uses: actions/cache@v3

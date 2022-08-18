@@ -28,7 +28,7 @@ jobs:
           python-version: "3.9.7"
       - uses: ./.github/actions/make_init
         with:
-          use_cached_venv: false
+          use_cached_venv: 'false'
       - name: Run make develop
         run: make develop
       - name: Run CLI smoke tests

@@ -36,7 +36,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - uses: ./.github/actions/make_init
         with:
-          use_cached_venv: true
+          use_cached_venv: 'true'
       - name: Run make develop
         run: make develop
       - name: Run Linters
