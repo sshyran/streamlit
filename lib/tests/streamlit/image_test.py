@@ -262,7 +262,7 @@ class ImageProtoTest(testutil.DeltaGeneratorTestCase):
             False,
         )
         img = image_list_proto.imgs[0]
-        self.assertTrue(img.markup.startswith(expected_prefix))
+        self.assertTrue(img.url.startswith(expected_prefix))
 
     def test_BytesIO_to_bytes(self):
         """Test streamlit.image.BytesIO_to_bytes."""

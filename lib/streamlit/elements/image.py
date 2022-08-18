@@ -26,6 +26,7 @@ from typing import cast, List, Optional, Sequence, TYPE_CHECKING, Tuple, Union
 from typing_extensions import Final, Literal, TypeAlias
 from urllib.parse import urlparse
 import re
+import xml.etree.ElementTree as ET
 
 import numpy as np
 from PIL import Image, ImageFile
@@ -355,6 +356,85 @@ def image_to_url(
     return this_file.url
 
 
+def _normalize_xmlns_attribute(root: ET.Element) -> None:
+    if "xmlns" not in root.attrib:
+        root.set("xmlns", "http://www.w3.org/2000/svg")
+
+
+def _parse_width_from_width_attribute(root: ET.Element) -> int:
+    width = 0
+    if "width" in root.attrib:
+        try:
+            # Get the width value based on width attribute
+            width = int(root.attrib.get("width", "").replace("px", ""))
+        except (TypeError, ValueError):
+            pass
+    return width
+
+
+def _parse_width_from_viewbox_attribute(root: ET.Element) -> int:
+    width = 0
+    if "viewBox" in root.attrib:
+        # viewBox can be separated by space or/and comma
+        raw_viewbox = root.attrib.get("viewBox", "")
+        if raw_viewbox.find(","):
+            viewbox_values = raw_viewbox.replace(" ", "").replace("px", "").split(",")
+        else:
+            viewbox_values = raw_viewbox.split(" ")
+
+        # viewBox has to have 4 values: min-x, min-y, width and height
+        if len(viewbox_values) == 4:
+            for i in range(0, len(viewbox_values)):
+                viewbox_values[i] = viewbox_values[i].replace(" ", "").replace("px", "")
+
+            try:
+                # Get the width value based on viewBox width attribute
+                width = int(viewbox_values[3])
+            except (TypeError, ValueError):
+                pass
+    return width
+
+
+def _get_svg_width(root: ET.Element) -> int:
+    width = _parse_width_from_width_attribute(root)
+    if width and width > 0:
+        return width
+    width = _parse_width_from_viewbox_attribute(root)
+    if width and width > 0:
+        return width
+    return 100
+
+
+def svg_to_url(image: str, width: Optional[int] = None) -> str:
+    """Prepares url with svg image, removes width and height attributes and sets them with width by default
+    if width is None it tries to resolve width with svg width attribute or viewbox attribute
+    """
+
+    # Parse svg image as xml ElementTree to work with its attributes
+    ET.register_namespace("", "http://www.w3.org/2000/svg")
+    try:
+        et = ET.ElementTree(ET.fromstring(image.strip().replace("\n", "")))
+    except ET.ParseError:
+        # If parsing failed return original SVG
+        return f"data:image/svg+xml,{image}"
+    root = et.getroot()
+
+    _normalize_xmlns_attribute(root)
+
+    if not width or width < 1:
+        width = _get_svg_width(root)
+
+    # Remove width and height attributes from svg
+    if "width" in root.attrib:
+        root.attrib.pop("width")
+    if "height" in root.attrib:
+        root.attrib.pop("height")
+
+    # Set width attribute on SVG
+    root.set("width", f"{width}px")
+    return f"data:image/svg+xml;utf8,{image}"
+
+
 def marshall_images(
     coordinates: str,
     image: ImageOrImageList,
@@ -417,8 +497,9 @@ def marshall_images(
 
             # Following regex allows svg image files to start either via a "<?xml...>" tag eventually followed by a "<svg...>" tag or directly starting with a "<svg>" tag
             if re.search(r"(^\s?(<\?xml[\s\S]*<svg\s)|^\s?<svg\s)", image):
-                proto_img.markup = f"data:image/svg+xml,{image}"
+                proto_img.url = svg_to_url(image, width)
                 is_svg = True
+
         if not is_svg:
             proto_img.url = image_to_url(
                 image, width, clamp, channels, output_format, image_id
