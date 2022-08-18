@@ -1,9 +1,8 @@
-name: "Setup & Initialize Virtual Env"
+name: "Setup Virtual Env"
 
 inputs:
   use_cached_venv:
     description: 'Use Cached Virtual Env'
-    required: true
     default: 'true'
 
 runs:
@@ -20,7 +19,7 @@ runs:
       run: |
         pip install pre-commit
         pre-commit install-hooks
-      shell: bash -ileo pipefail {0} {0}
+      shell: bash -ileo pipefail {0}
     - name: Setup Node
       uses: actions/setup-node@v3
       with:
@@ -29,14 +28,9 @@ runs:
         cache-dependency-path: '**/yarn.lock'
     - name: Initialize React
       run: make react-init
-      shell: bash -ileo pipefail {0} {0}
+      shell: bash -ileo pipefail {0}
     - name: Install Dependencies
       run: |
-        echo "THIS IS THE USE_CACHED BOOLEAN"
-        echo ${{ inputs.use_cached_venv }}
-        echo "THIS IS THE USE_CACHED TEST RESULT  "
-        echo ${{ inputs.use_cached_venv == true }}
-
         sudo apt update
         # protobuf, pyodbc, dot, & graphviz dependencies
         sudo apt install -y gnupg \
@@ -48,7 +42,7 @@ runs:
         sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4DEA8909DC6A13A3
         sudo apt update
         sudo apt install -y protobuf-compiler
-      shell: bash -ileo pipefail {0} {0}
+      shell: bash -ileo pipefail {0}
     # Combine hashes of the Python interpreter, Pipfile, and today's
     # date into a file whose hash will key the Python virtualenv.
     #
@@ -85,10 +79,10 @@ runs:
         make setup
         make pipenv-install
         deactivate
-      shell: bash -ileo pipefail {0} {0}
+      shell: bash -ileo pipefail {0}
     - name: Activate virtualenv
       run: echo 'source venv/bin/activate' >> $HOME/.bash_profile
-      shell: bash -ileo pipefail {0} {0}
+      shell: bash -ileo pipefail {0}
     - name: Generate Protobufs
       run: make protobuf
-      shell: bash -ileo pipefail {0} {0}
+      shell: bash -ileo pipefail {0}
