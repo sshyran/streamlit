@@ -32,6 +32,11 @@ runs:
       shell: bash -ileo pipefail {0} {0}
     - name: Install Dependencies
       run: |
+        echo "THIS IS THE USE_CACHED BOOLEAN"
+        echo ${{ inputs.use_cached_venv }}
+        echo "THIS IS THE USE_CACHED TEST RESULT  "
+        echo ${{ inputs.use_cached_venv == true }}
+
         sudo apt update
         # protobuf, pyodbc, dot, & graphviz dependencies
         sudo apt install -y gnupg \
@@ -57,11 +62,6 @@ runs:
     - if: inputs.use_cached_venv == true
       name: Create Python environment cache key
       run: |
-        echo "Creating the cache key"
-        echo "This is the input - use_cached_venv:"
-        echo inputs.use_cached_venv
-        echo inputs.use_cached_venv == true
-
         md5sum $(which python) > $GITHUB_WORKSPACE/python_cache_key.md5
         md5sum lib/Pipfile >> $GITHUB_WORKSPACE/python_cache_key.md5
         md5sum lib/test-requirements.txt >> $GITHUB_WORKSPACE/python_cache_key.md5
@@ -79,13 +79,6 @@ runs:
     - if: steps.cache-virtualenv.outputs.cache-hit != 'true'
       name: Create Virtual Env
       run: |
-        echo "Creating the virtual env"
-        echo "This is the input - use_cached_venv:"
-        echo inputs.use_cached_venv
-        echo inputs.use_cached_venv == true
-        echo "This is the cache hit boolean:"
-        echo steps.cache-virtualenv.outputs.cache-hit
-
         python -m venv venv
         source venv/bin/activate
         pip install --upgrade pip
