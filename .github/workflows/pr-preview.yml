@@ -43,7 +43,7 @@ jobs:
         run: |
           echo "This is the preview branch name:"
           echo $PREVIEW_BRANCH
-        with:
+        env:
           PREVIEW_BRANCH: ${{ env.PREVIEW_BRANCH }}    
 
       # Need the AWS S3 secret/key for the below steps - added the if statement to gate for now
