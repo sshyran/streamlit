@@ -33,18 +33,12 @@ jobs:
         run: |
           sudo apt install rsync
           BUILD_AS_FAST_AS_POSSIBLE=1 make package
-      - name: Set PREVIEW_BRANCH env variable
+      - name: Set PREVIEW_BRANCH & BRANCH env variable
         uses: ./.github/actions/preview_branch
         with:
           pull_request_number: ${{ github.event.pull_request.number }}
           ref_type: ${{ github.ref_type }}
           branch: ${{ github.ref_name }}
-      - name: Testing using env variable
-        run: |
-          echo "This is the preview branch name:"
-          echo $PREVIEW_BRANCH
-        env:
-          PREVIEW_BRANCH: ${{ env.PREVIEW_BRANCH }}    
 
       # Need the AWS S3 secret/key for the below steps - added the if statement to gate for now
 

@@ -32,3 +32,4 @@ runs:
         PR_NUMBER: ${{ inputs.pull_request_number }}
         REF_TYPE: ${{ inputs.ref_type }}
         BRANCH_NAME: ${{ inputs.branch }}
+      shell: bash -ileo pipefail {0}
