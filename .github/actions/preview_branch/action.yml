@@ -1,4 +1,4 @@
-name: "Set PREVIEW_BRANCH env variable"
+name: "Set PREVIEW_BRANCH & BRANCH env variable"
 
 inputs:
   pull_request_number:
@@ -27,6 +27,7 @@ runs:
             echo "main-preview"
           fi
         )" >> $GITHUB_ENV
+        echo "BRANCH=$BRANCH_NAME" >> $GITHUB_ENV
       env:
         PR_NUMBER: ${{ inputs.pull_request_number }}
         REF_TYPE: ${{ inputs.ref_type }}
