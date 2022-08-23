@@ -39,6 +39,13 @@ jobs:
           pull_request_number: ${{ github.event.pull_request.number }}
           ref_type: ${{ github.ref_type }}
           branch: ${{ github.ref_name }}
+      - name: Use env variables
+        run: |
+          echo "THESE ARE THE ENV VARIABLES"
+          echo ${{ env.BRANCH }}
+          echo $PREVIEW_BRANCH
+        env:
+          PREVIEW_BRANCH: ${{ env.PREVIEW_BRANCH }}
 
       # Need the AWS S3 secret/key for the below steps - added the if statement to gate for now
 
