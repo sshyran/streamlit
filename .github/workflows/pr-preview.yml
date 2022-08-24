@@ -51,7 +51,6 @@ jobs:
           PREVIEW_BRANCH: ${{ env.PREVIEW_BRANCH }}
 
       # Need the AWS S3 secret/key for the below steps - added the if statement to gate for now
-
       - if: ${{ 'true' == 'false' }}
         name: Upload wheel to S3
         run: |
@@ -92,7 +91,7 @@ jobs:
       - run: |
           git config --global user.email "core+streamlitbot-github@streamlit.io"
           git config --global user.name "Streamlit Bot"
-          cd core-previews
+
           git branch -D ${PREVIEW_BRANCH} &>/dev/null || true
           git checkout -b ${PREVIEW_BRANCH}
           cat ../S3_URL >> requirements.txt
