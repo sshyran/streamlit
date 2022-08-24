@@ -86,7 +86,11 @@ jobs:
           CORE_PREVIEWS_S3_SECRET_KEY: ${{ secrets.CORE_PREVIEWS_S3_SECRET_KEY }}
       - name: Setup preview repo
         uses: actions/checkout@v3
-        run: |
+        with:
+          repository: streamlit/core-previews
+          persist-credentials: false
+          # submodules: 'recursive'
+      - run: |
           git config --global user.email "core+streamlitbot-github@streamlit.io"
           git config --global user.name "Streamlit Bot"
           cd core-previews
@@ -96,10 +100,6 @@ jobs:
           git add .
           git commit -m "Prepare core preview: ${PREVIEW_BRANCH}"
           git push -f origin ${PREVIEW_BRANCH}
-        with:
-          repository: streamlit/core-previews
-          persist-credentials: false
-          submodules: 'recursive'
         env:
           PREVIEW_BRANCH: ${{ env.PREVIEW_BRANCH }}
           S3_URL: ${{ env.S3_URL }}
