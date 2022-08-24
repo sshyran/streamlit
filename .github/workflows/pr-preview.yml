@@ -44,6 +44,9 @@ jobs:
           echo "THESE ARE THE ENV VARIABLES"
           echo ${{ env.BRANCH }}
           echo $PREVIEW_BRANCH
+          cd lib/dist
+          export WHEELFILE="$(ls -t *.whl | head -n 1)"
+          echo -e "S3_URL=https://core-previews.s3-us-west-2.amazonaws.com/${PREVIEW_BRANCH}/${WHEELFILE}" >> $GITHUB_ENV
         env:
           PREVIEW_BRANCH: ${{ env.PREVIEW_BRANCH }}
 
@@ -81,25 +84,44 @@ jobs:
           PREVIEW_BRANCH: ${{ env.PREVIEW_BRANCH }}
           CORE_PREVIEWS_S3_KEY_ID: ${{ secrets.CORE_PREVIEWS_S3_KEY_ID }}
           CORE_PREVIEWS_S3_SECRET_KEY: ${{ secrets.CORE_PREVIEWS_S3_SECRET_KEY }}
-      - if: ${{ 'true' == 'false' }}
-        name: Setup preview repo
+      - name: Setup preview repo
+        uses: actions/checkout@v3
         run: |
           git config --global user.email "core+streamlitbot-github@streamlit.io"
           git config --global user.name "Streamlit Bot"
-          git clone git@github.com:streamlit/core-previews.git
-
           cd core-previews
           git branch -D ${PREVIEW_BRANCH} &>/dev/null || true
           git checkout -b ${PREVIEW_BRANCH}
-
           cat ../S3_URL >> requirements.txt
-
           git add .
           git commit -m "Prepare core preview: ${PREVIEW_BRANCH}"
           git push -f origin ${PREVIEW_BRANCH}
+        with:
+          repository: streamlit/core-previews
+          persist-credentials: false
+          submodules: 'recursive'
         env:
           PREVIEW_BRANCH: ${{ env.PREVIEW_BRANCH }}
           S3_URL: ${{ env.S3_URL }}
+      # - if: ${{ 'true' == 'false' }}
+      #   name: Setup preview repo
+      #   run: |
+      #     git config --global user.email "core+streamlitbot-github@streamlit.io"
+      #     git config --global user.name "Streamlit Bot"
+      #     git clone git@github.com:streamlit/core-previews.git
+
+      #     cd core-previews
+      #     git branch -D ${PREVIEW_BRANCH} &>/dev/null || true
+      #     git checkout -b ${PREVIEW_BRANCH}
+
+      #     cat ../S3_URL >> requirements.txt
+
+      #     git add .
+      #     git commit -m "Prepare core preview: ${PREVIEW_BRANCH}"
+      #     git push -f origin ${PREVIEW_BRANCH}
+      #   env:
+      #     PREVIEW_BRANCH: ${{ env.PREVIEW_BRANCH }}
+      #     S3_URL: ${{ env.S3_URL }}
       - if: ${{ 'true' == 'false' }}
         name: Ready to deploy!
         run: |
