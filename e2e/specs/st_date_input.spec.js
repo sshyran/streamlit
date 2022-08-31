@@ -250,14 +250,14 @@ describe("st.date_input", () => {
     // click outside of date input
     cy.contains("Range, two dates").click();
 
-    // value should _not_ be reset to default (datetime.date(2019, 7, 6), and should have empty range value ()
+    // value will be reset to default (datetime.date(2019, 7, 6), and will not have empty range values
     cy.get(".stMarkdown").should(
       "have.text",
       "Value 1: 1970-01-01" +
         "Value 2: 2019-07-06" +
         "Value 3: ()" +
         "Value 4: (datetime.date(2019, 7, 6),)" +
-        "Value 5: ()" +
+        "Value 5: (datetime.date(2019, 7, 6), datetime.date(2019, 7, 8))" +
         "Value 6: ()" +
         "Value 7: 1970-01-01" +
         "Date Input Changed: False"
