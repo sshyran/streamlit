@@ -72,7 +72,7 @@ export interface State {
 class NumberInput extends React.PureComponent<Props, State> {
   private readonly formClearHelper = new FormClearHelper()
 
-  private inputRef = React.createRef<HTMLInputElement>()
+  private inputRef = React.createRef<HTMLInputElement | HTMLTextAreaElement>()
 
   constructor(props: Props) {
     super(props)
@@ -218,7 +218,9 @@ class NumberInput extends React.PureComponent<Props, State> {
     this.setState({ isFocused: true })
   }
 
-  private onChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+  private onChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ): void => {
     const { value } = e.target
 
     let numValue: number
@@ -236,7 +238,9 @@ class NumberInput extends React.PureComponent<Props, State> {
     })
   }
 
-  private onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
+  private onKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
+  ): void => {
     const { key } = e
 
     switch (key) {
@@ -254,7 +258,9 @@ class NumberInput extends React.PureComponent<Props, State> {
     }
   }
 
-  private onKeyPress = (e: React.KeyboardEvent<HTMLInputElement>): void => {
+  private onKeyPress = (
+    e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
+  ): void => {
     if (e.key === "Enter" && this.state.dirty) {
       this.commitWidgetValue({ fromUi: true })
     }

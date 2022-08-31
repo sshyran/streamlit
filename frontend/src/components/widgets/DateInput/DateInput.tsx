@@ -18,7 +18,7 @@
 import React from "react"
 import moment from "moment"
 import { withTheme } from "@emotion/react"
-import { Datepicker as UIDatePicker } from "baseui/datepicker"
+import { Datepicker as UIDatePicker, DENSITY } from "baseui/datepicker"
 import { PLACEMENT } from "baseui/popover"
 import { DateInput as DateInputProto } from "src/autogen/proto"
 import { FormClearHelper } from "src/components/widgets/Form"
@@ -141,11 +141,32 @@ class DateInput extends React.PureComponent<Props, State> {
     )
   }
 
-  private handleChange = ({ date }: { date: Date | Date[] }): void => {
+  private handleChange = ({
+    date,
+  }: {
+    date: Date | (Date | null | undefined)[] | null | undefined
+  }): void => {
+    if (!date) {
+      this.setState({
+        values: this.initialValue,
+        isEmpty: true,
+      })
+      return
+    }
+    const values: Date[] = []
+    if (Array.isArray(date)) {
+      date.forEach((dt: Date | null | undefined) => {
+        if (dt) {
+          values.push(dt)
+        }
+      })
+    } else {
+      values.push(date)
+    }
     this.setState(
       {
-        values: Array.isArray(date) ? date : [date],
-        isEmpty: !date,
+        values,
+        isEmpty: values.length === 0,
       },
       () => {
         if (!this.state.isEmpty) this.commitWidgetValue({ fromUi: true })
@@ -203,6 +224,7 @@ class DateInput extends React.PureComponent<Props, State> {
           )}
         </WidgetLabel>
         <UIDatePicker
+          density={DENSITY.high}
           formatString="yyyy/MM/dd"
           disabled={disabled}
           onChange={this.handleChange}
