@@ -4811,10 +4811,10 @@ base@^0.11.1:
     mixin-deep "^1.2.0"
     pascalcase "^0.1.1"
 
-baseui@12.1.0:
-  version "12.1.0"
-  resolved "https://registry.yarnpkg.com/baseui/-/baseui-12.1.0.tgz#ee01771852dcd38455292883df673958eaa8c68a"
-  integrity sha512-nZ3OXD7G86tm7w5wjzRTCmXX/wMOUmMDREj9JwdZwmokei+DTnxO/CFRSVq5m14/UCS5GMXrQLNnsQ/eU2uXoQ==
+baseui@12.1.1:
+  version "12.1.1"
+  resolved "https://registry.yarnpkg.com/baseui/-/baseui-12.1.1.tgz#b1a29f6191570e13def50ade545209ecd973860b"
+  integrity sha512-ipa2zejvwURmA9C4nHT5twJg7JRsAgyEa0pZBuCsVAQu7BSa74nbYFZ66mAO8bQzcVAdWolmEgqRNhZte+Hlpg==
   dependencies:
     "@date-io/date-fns" "^2.6.2"
     "@types/react-virtualized-auto-sizer" "^1.0.0"
