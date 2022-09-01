@@ -244,17 +244,17 @@ class DateInput extends React.PureComponent<Props, State> {
             },
             CalendarContainer: {
               style: {
-                fontSize: fontSizes.sm,
+                fontSize: fontSizes.twoSm,
               },
             },
             Week: {
               style: {
-                fontSize: fontSizes.sm,
+                fontSize: fontSizes.twoSm,
               },
             },
             Day: {
               style: ({ $selected }: { $selected: boolean }) => ({
-                fontSize: fontSizes.twoSmPx,
+                fontSize: fontSizes.twoSm,
                 "::after": {
                   borderColor: $selected ? colors.transparent : "",
                 },
