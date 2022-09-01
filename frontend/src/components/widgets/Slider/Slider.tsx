@@ -215,8 +215,9 @@ class Slider extends React.PureComponent<Props, State> {
   private renderThumb = React.forwardRef<HTMLDivElement, SharedProps>(
     (props: SharedProps, ref): JSX.Element => {
       const { $value, $thumbIndex } = props
-      // @ts-ignore
-      const formattedValue = this.formatValue($value[$thumbIndex])
+      const formattedValue = $value
+        ? this.formatValue($value[$thumbIndex as number])
+        : ""
       const passThrough = pick(props, [
         "role",
         "style",
