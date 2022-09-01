@@ -254,7 +254,7 @@ class DateInput extends React.PureComponent<Props, State> {
             },
             Day: {
               style: ({ $selected }: { $selected: boolean }) => ({
-                fontSize: fontSizes.sm,
+                fontSize: fontSizes.twoSmPx,
                 "::after": {
                   borderColor: $selected ? colors.transparent : "",
                 },
