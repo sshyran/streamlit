@@ -229,12 +229,24 @@ class Multiselect extends React.PureComponent<Props, State> {
               },
 
               ControlContainer: {
-                style: () => ({
+                style: ({ $isFocused }) => ({
                   // Baseweb requires long-hand props, short-hand leads to weird bugs & warnings.
                   borderLeftWidth: "1px",
                   borderRightWidth: "1px",
                   borderTopWidth: "1px",
                   borderBottomWidth: "1px",
+                  borderRightColor: $isFocused
+                    ? "rgb(255, 75, 75)"
+                    : theme.colors.primary,
+                  borderLeftColor: $isFocused
+                    ? "rgb(255, 75, 75)"
+                    : theme.colors.primary,
+                  borderTopColor: $isFocused
+                    ? "rgb(255, 75, 75)"
+                    : theme.colors.primary,
+                  borderBottomColor: $isFocused
+                    ? "rgb(255, 75, 75)"
+                    : theme.colors.primary,
                 }),
               },
 
